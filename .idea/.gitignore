@@ -1,0 +1,41 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# Ignore Python bytecode files
+__pycache__/
+# Ignore virtual environment files
+venv/
+env/
+# Ignore any compiled Python files
+*.pyc
+*.pyo
+__pycache__/
+# Ignore logs and other temporary files
+*.log
+*.swp
+.DS_Store
+# Ignore build and distribution directories
+build/
+dist/
+# Ignore game assets and resources (customize this based on your project structure)
+assets/
+resources/
+# Ignore any IDE-specific files and directories
+.idea/
+.vscode/
+*.iml
+# Ignore system-generated files
+__init__.py
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+# Ignore environment-specific files
+*.env
+# Ignore dependencies and virtual environment
+requirements.txt
