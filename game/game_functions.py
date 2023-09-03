@@ -3,6 +3,7 @@ import sys
 import pygame
 
 from assets.bullet import Bullet
+from assets.alien import Alien
 
 
 def check_events(settings, screen, ship, bullets):
@@ -47,10 +48,24 @@ def update_bullets(bullets):
             bullets.remove(bullet)
 
 
-def update_screen(settings, screen, ship, bullets):
+def create_fleet(settings, screen, aliens):
+    alien = Alien(settings, screen)
+    alien_width = alien.rect.width
+    available_space_x = settings.screen_width - 2 * alien_width
+    number_of_aliens_x = int(available_space_x / (2 * alien_width))
+
+    for alien_number in range(number_of_aliens_x):
+        alien = Alien(settings, screen)
+        alien.x = alien_width + 2 * alien_width * alien_number
+        alien.rect.x = alien.x
+        aliens.add(alien)
+
+
+def update_screen(settings, screen, ship, aliens, bullets):
     screen.fill(settings.background_color)
 
     ship.blit_me()
+    aliens.draw(screen)
 
     for bullet in bullets.sprites():
         bullet.draw_bullet()
