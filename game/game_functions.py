@@ -45,14 +45,26 @@ def fire_bullet(settings: Settings, screen: Surface, ship: Ship, bullets: Group)
         bullets.add(new_bullet)
 
 
-def update_bullets(aliens: Group, bullets: Group) -> None:
+def check_alien_bullet_collisions(aliens: Group, bullets: Group) -> dict:
+    return pygame.sprite.groupcollide(bullets, aliens, True, True)
+
+
+def check_for_new_fleet(settings: Settings, screen: Surface, ship: Ship, aliens: Group, bullets: Group) -> None:
+    if len(aliens) == 0:
+        bullets.empty()
+        create_fleet(settings, screen, ship, aliens)
+
+
+def update_bullets(settings: Settings, screen: Surface, ship: Ship, aliens: Group, bullets: Group) -> None:
     bullets.update()
 
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
 
-    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+    check_alien_bullet_collisions(aliens, bullets)
+
+    check_for_new_fleet(settings, screen, ship, aliens, bullets)
 
 
 def create_fleet(settings: Settings, screen: Surface, ship: Ship, aliens: Group) -> None:
