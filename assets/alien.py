@@ -1,10 +1,13 @@
 import pygame
 from pygame.sprite import Sprite
+from pygame.surface import Surface
+
+from game.settings import Settings
 
 
 class Alien(Sprite):
 
-    def __init__(self, settings, screen):
+    def __init__(self, settings: Settings, screen: Surface):
         super().__init__()
         self.screen = screen
         self.settings = settings
@@ -17,5 +20,9 @@ class Alien(Sprite):
 
         self.x = float(self.rect.x)
 
-    def blit_me(self):
+    def update(self) -> None:
+        self.x += self.settings.alien_speed_factor
+        self.rect.x = self.x
+
+    def blit_me(self) -> None:
         self.screen.blit(self.image, self.rect)

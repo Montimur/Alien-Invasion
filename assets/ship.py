@@ -1,9 +1,13 @@
 import pygame
 
+from pygame.surface import Surface
+
+from game.settings import Settings
+
 
 class Ship:
 
-    def __init__(self, settings, screen):
+    def __init__(self, settings: Settings, screen: Surface):
         self.settings = settings
         self.screen = screen
         self.image = pygame.image.load('../images/ship.bmp')
@@ -18,7 +22,7 @@ class Ship:
         self.moving_right = False
         self.moving_left = False
 
-    def update(self):
+    def update(self) -> None:
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.center += self.settings.ship_speed_factor
 
@@ -27,5 +31,5 @@ class Ship:
 
         self.rect.centerx = self.center
 
-    def blit_me(self):
+    def blit_me(self) -> None:
         self.screen.blit(self.image, self.rect)
