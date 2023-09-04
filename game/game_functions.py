@@ -86,8 +86,22 @@ def get_number_of_rows(settings: Settings, ship_height: int, alien_height: int) 
     return number_of_rows
 
 
-def update_aliens(aliens: Group) -> None:
+def update_aliens(settings: Settings, aliens: Group) -> None:
+    check_fleet_edges(settings, aliens)
     aliens.update()
+
+
+def check_fleet_edges(settings: Settings, aliens: Group) -> None:
+    for alien in aliens.sprites():
+        if alien.check_edges():
+            change_fleet_direction(settings, aliens)
+            break
+
+
+def change_fleet_direction(settings: Settings, aliens: Group) -> None:
+    for alien in aliens.sprites():
+        alien.rect.y += settings.fleet_drop_speed
+    settings.fleet_direction *= -1
 
 
 def update_screen(settings: Settings, screen: Surface, ship: Ship, aliens: Group, bullets: Group) -> None:
