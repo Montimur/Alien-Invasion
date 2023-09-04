@@ -8,6 +8,7 @@ from pygame.event import Event
 from assets.ship import Ship
 from assets.bullet import Bullet
 from assets.alien import Alien
+from assets.drop import Drop
 from game.settings import Settings
 
 
@@ -104,14 +105,75 @@ def change_fleet_direction(settings: Settings, aliens: Group) -> None:
     settings.fleet_direction *= -1
 
 
-def update_screen(settings: Settings, screen: Surface, ship: Ship, aliens: Group, bullets: Group) -> None:
+def update_screen(settings: Settings, screen: Surface, ship: Ship, aliens: Group, bullets: Group, rain_drops: Group) -> None:
     screen.fill(settings.background_color)
 
     ship.blit_me()
     aliens.draw(screen)
+    rain_drops.draw(screen)
 
     for bullet in bullets.sprites():
         bullet.draw_bullet()
 
     pygame.display.flip()
 
+
+def get_number_of_drops(settings: Settings, drop_width: int) -> int:
+    available_space_x = settings.screen_width
+    number_of_drops = (available_space_x / (1.5 * drop_width))
+    return int(number_of_drops)
+
+
+def get_number_of_drop_rows(settings: Settings, drop_height: int) -> int:
+    available_space_y = settings.screen_height
+    number_of_rows = (available_space_y / (1.5 * drop_height))
+    return int(number_of_rows)
+
+
+def create_drop(settings: Settings, screen: Surface, rain_drops: Group, drop_number: int, row_number: int) -> None:
+    drop = Drop(settings, screen)
+    drop_width = drop.rect.width
+    drop_height = drop.rect.height
+
+    drop.x = drop_width + 1.5 * drop_width * drop_number
+    drop.y = drop_height + 1.5 * drop_height * row_number
+
+    drop.rect.x = drop.x
+    drop.rect.y = drop.y
+
+    rain_drops.add(drop)
+
+
+def create_rain_drops(settings: Settings, screen: Surface, rain_drops: Group) -> None:
+    drop = Drop(settings, screen)
+    drop_width = drop.rect.width
+    drop_height = drop.rect.height
+
+    number_of_drops = get_number_of_drops(settings, drop_width)
+    number_of_drop_rows = get_number_of_drop_rows(settings, drop_height)
+
+    for row_number in range(number_of_drop_rows):
+        for drop_number in range(number_of_drops):
+            create_drop(settings, screen, rain_drops, drop_number, row_number)
+
+
+def add_one_row_of_rain_drops(settings: Settings, screen: Surface, rain_drops: Group) -> None:
+    drop = Drop(settings, screen)
+    drop_width = drop.rect.width
+    number_of_drops = get_number_of_drops(settings, drop_width)
+
+    for drop_number in range(number_of_drops):
+        create_drop(settings, screen, rain_drops, drop_number, 0)
+
+
+def update_drops(settings: Settings, screen: Surface, rain_drops: Group) -> None:
+    deleted_row = False
+    for drop in rain_drops.copy():
+        if drop.check_bottom():
+            rain_drops.remove(drop)
+            if not deleted_row:
+                deleted_row = True
+    if deleted_row:
+        add_one_row_of_rain_drops(settings, screen, rain_drops)
+
+    rain_drops.update()

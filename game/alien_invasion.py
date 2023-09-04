@@ -20,15 +20,18 @@ def run_game():
 
     bullets = Group()
     aliens = Group()
+    rain_drops = Group()
 
     gf.create_fleet(settings, screen, ship, aliens)
+    gf.create_rain_drops(settings, screen, rain_drops)
 
     while True:
         gf.check_events(settings, screen, ship, bullets)
         ship.update()
         gf.update_bullets(bullets)
         gf.update_aliens(settings, aliens)
-        gf.update_screen(settings, screen, ship, aliens, bullets)
+        gf.update_drops(settings, screen, rain_drops)
+        gf.update_screen(settings, screen, ship, aliens, bullets, rain_drops)
 
 
 run_game()
