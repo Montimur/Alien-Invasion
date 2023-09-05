@@ -2,18 +2,20 @@ import sys
 from time import sleep
 
 import pygame
+from pygame.event import Event
 from pygame.sprite import Group
 from pygame.surface import Surface
-from pygame.event import Event
 
-from assets.ship import Ship
-from assets.bullet import Bullet
 from assets.alien import Alien
+from assets.bullet import Bullet
+from assets.ship import Ship
+from controls.button import Button
 from game.game_stats import GameStats
 from game.settings import Settings
 
 
-def check_events(settings: Settings, screen: Surface, ship: Ship, bullets: Group) -> None:
+def check_events(settings: Settings, screen: Surface, stats: GameStats, play_button: Button, ship: Ship, aliens: Group,
+                 bullets: Group) -> None:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -21,6 +23,9 @@ def check_events(settings: Settings, screen: Surface, ship: Ship, bullets: Group
             check_keydown_events(event, settings, screen, ship, bullets)
         elif event.type == pygame.KEYUP:
             check_keyup_event(event, ship)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            check_play_button(settings, screen, stats, play_button, ship, aliens, bullets, mouse_x, mouse_y)
 
 
 def check_keydown_events(event: Event, settings: Settings, screen: Surface, ship: Ship, bullets: Group) -> None:
@@ -39,6 +44,19 @@ def check_keyup_event(event: Event, ship: Ship) -> None:
         ship.moving_right = False
     elif event.key == pygame.K_LEFT:
         ship.moving_left = False
+
+
+def check_play_button(settings: Settings, screen: Surface, stats: GameStats, play_button: Button, ship: Ship,
+                      aliens: Group, bullets: Group, mouse_x: int, mouse_y: int) -> None:
+    if not stats.game_active and play_button.rect.collidepoint(mouse_x, mouse_y):
+        stats.reset_stats()
+        stats.game_active = True
+
+        aliens.empty()
+        bullets.empty()
+
+        create_fleet(settings, screen, ship, aliens)
+        ship.center_ship()
 
 
 def fire_bullet(settings: Settings, screen: Surface, ship: Ship, bullets: Group) -> None:
@@ -146,7 +164,8 @@ def change_fleet_direction(settings: Settings, aliens: Group) -> None:
     settings.fleet_direction *= -1
 
 
-def update_screen(settings: Settings, screen: Surface, ship: Ship, aliens: Group, bullets: Group) -> None:
+def update_screen(settings: Settings, screen: Surface, stats: GameStats, ship: Ship, aliens: Group, bullets: Group, play_button: Button)\
+        -> None:
     screen.fill(settings.background_color)
 
     ship.blit_me()
@@ -154,6 +173,9 @@ def update_screen(settings: Settings, screen: Surface, ship: Ship, aliens: Group
 
     for bullet in bullets.sprites():
         bullet.draw_bullet()
+
+    if not stats.game_active:
+        play_button.draw_button()
 
     pygame.display.flip()
 
