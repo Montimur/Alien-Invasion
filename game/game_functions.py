@@ -49,6 +49,7 @@ def check_keyup_event(event: Event, ship: Ship) -> None:
 def check_play_button(settings: Settings, screen: Surface, stats: GameStats, play_button: Button, ship: Ship,
                       aliens: Group, bullets: Group, mouse_x: int, mouse_y: int) -> None:
     if not stats.game_active and play_button.rect.collidepoint(mouse_x, mouse_y):
+        pygame.mouse.set_visible(False)
         stats.reset_stats()
         stats.game_active = True
 
@@ -149,6 +150,7 @@ def ship_hit(settings: Settings, stats: GameStats, screen: Surface, ship: Ship, 
         sleep(0.5)
     else:
         stats.game_active = False
+        pygame.mouse.set_visible(True)
 
 
 def check_fleet_edges(settings: Settings, aliens: Group) -> None:
