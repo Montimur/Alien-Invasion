@@ -20,7 +20,7 @@ def check_events(settings: Settings, screen: Surface, stats: GameStats, play_but
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            check_keydown_events(event, settings, screen, ship, bullets)
+            check_keydown_events(event, settings, screen, stats, ship, aliens, bullets)
         elif event.type == pygame.KEYUP:
             check_keyup_event(event, ship)
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -28,13 +28,15 @@ def check_events(settings: Settings, screen: Surface, stats: GameStats, play_but
             check_play_button(settings, screen, stats, play_button, ship, aliens, bullets, mouse_x, mouse_y)
 
 
-def check_keydown_events(event: Event, settings: Settings, screen: Surface, ship: Ship, bullets: Group) -> None:
+def check_keydown_events(event: Event, settings: Settings, screen: Surface, stats: GameStats, ship: Ship, aliens: Group, bullets: Group) -> None:
     if event.key == pygame.K_RIGHT:
         ship.moving_right = True
     elif event.key == pygame.K_LEFT:
         ship.moving_left = True
     elif event.key == pygame.K_SPACE:
         fire_bullet(settings, screen, ship, bullets)
+    elif event.key == pygame.K_p and not stats.game_active:
+        start_game(settings, screen, stats, ship, aliens, bullets)
     elif event.key == pygame.K_q:
         sys.exit()
 
@@ -49,15 +51,19 @@ def check_keyup_event(event: Event, ship: Ship) -> None:
 def check_play_button(settings: Settings, screen: Surface, stats: GameStats, play_button: Button, ship: Ship,
                       aliens: Group, bullets: Group, mouse_x: int, mouse_y: int) -> None:
     if not stats.game_active and play_button.rect.collidepoint(mouse_x, mouse_y):
-        pygame.mouse.set_visible(False)
-        stats.reset_stats()
-        stats.game_active = True
+        start_game(settings, screen, stats, ship, aliens, bullets)
 
-        aliens.empty()
-        bullets.empty()
 
-        create_fleet(settings, screen, ship, aliens)
-        ship.center_ship()
+def start_game(settings: Settings, screen: Surface, stats: GameStats, ship: Ship, aliens: Group, bullets: Group) -> None:
+    pygame.mouse.set_visible(False)
+    stats.reset_stats()
+    stats.game_active = True
+
+    aliens.empty()
+    bullets.empty()
+
+    create_fleet(settings, screen, ship, aliens)
+    ship.center_ship()
 
 
 def fire_bullet(settings: Settings, screen: Surface, ship: Ship, bullets: Group) -> None:
