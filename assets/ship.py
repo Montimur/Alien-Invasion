@@ -33,3 +33,6 @@ class Ship:
 
     def blit_me(self) -> None:
         self.screen.blit(self.image, self.rect)
+
+    def center_ship(self) -> None:
+        self.center = self.screen_rect.centerx

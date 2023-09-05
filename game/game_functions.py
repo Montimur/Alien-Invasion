@@ -1,4 +1,5 @@
 import sys
+from time import sleep
 
 import pygame
 from pygame.sprite import Group
@@ -8,6 +9,7 @@ from pygame.event import Event
 from assets.ship import Ship
 from assets.bullet import Bullet
 from assets.alien import Alien
+from game.game_stats import GameStats
 from game.settings import Settings
 
 
@@ -100,12 +102,35 @@ def get_number_of_rows(settings: Settings, ship_height: int, alien_height: int) 
     return number_of_rows
 
 
-def update_aliens(settings: Settings, ship: Ship, aliens: Group) -> None:
+def update_aliens(settings: Settings, stats: GameStats, screen: Surface, ship: Ship, aliens: Group, bullets: Group) -> None:
     check_fleet_edges(settings, aliens)
     aliens.update()
 
-    if pygame.sprite.spritecollideany(ship, aliens):
-        print("Ship hit!!!")
+    if pygame.sprite.spritecollideany(ship, aliens) or check_aliens_hit_bottom(screen, aliens):
+        ship_hit(settings, stats, screen, ship, aliens, bullets)
+
+
+def check_aliens_hit_bottom(screen: Surface, aliens: Group) -> bool:
+    screen_rect = screen.get_rect()
+    for alien in aliens.sprites():
+        if alien.rect.bottom >= screen_rect.bottom:
+            return True
+    return False
+
+
+def ship_hit(settings: Settings, stats: GameStats, screen: Surface, ship: Ship, aliens: Group, bullets: Group) -> None:
+    if stats.ships_left > 0:
+        stats.ships_left -= 1
+
+        aliens.empty()
+        bullets.empty()
+
+        create_fleet(settings, screen, ship, aliens)
+        ship.center_ship()
+
+        sleep(0.5)
+    else:
+        stats.game_active = False
 
 
 def check_fleet_edges(settings: Settings, aliens: Group) -> None:
