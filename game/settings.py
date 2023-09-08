@@ -1,6 +1,11 @@
 class Settings:
 
     def __init__(self):
+        self.target_width = 25
+        self.target_height = 150
+        self.target_color = (255, 0, 0)
+        self.target_speed_factor = 0.75
+
         self.screen_width = 1200
         self.screen_height = 800
         self.background_color = (100, 100, 230)
