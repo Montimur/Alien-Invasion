@@ -33,7 +33,7 @@ def run_game():
         if stats.game_active:
             ship.update()
             target.update()
-            gf.update_bullets(stats, bullets, screen, target)
+            gf.update_bullets(settings, stats, bullets, screen, target)
             gf.check_stats(stats, bullets)
         gf.update_screen(settings, stats, screen, ship, target, bullets, play_button)
 

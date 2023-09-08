@@ -23,7 +23,7 @@ def check_events(settings: Settings, screen: Surface, stats: GameStats, ship: Sh
         elif event.type == pygame.KEYUP:
             check_keyup_event(event, ship)
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            check_mouse_event(stats, ship, target, bullets, play_button)
+            check_mouse_event(settings, stats, ship, target, bullets, play_button)
 
 
 def check_keydown_events(event: Event, settings: Settings, screen: Surface, ship: Ship, bullets: Group) -> None:
@@ -42,13 +42,14 @@ def check_keyup_event(event: Event, ship: Ship) -> None:
         ship.moving_down = False
 
 
-def check_mouse_event(stats: GameStats, ship: Ship, target: Target, bullets: Group, play_button: Button) -> None:
+def check_mouse_event(settings: Settings, stats: GameStats, ship: Ship, target: Target, bullets: Group, play_button: Button) -> None:
     mouse_x, mouse_y = pygame.mouse.get_pos()
     if not stats.game_active and play_button.rect.collidepoint(mouse_x, mouse_y):
-        start_game(stats, ship, target, bullets)
+        start_game(settings, stats, ship, target, bullets)
 
 
-def start_game(stats: GameStats, ship: Ship, target: Target, bullets: Group) -> None:
+def start_game(settings: Settings, stats: GameStats, ship: Ship, target: Target, bullets: Group) -> None:
+    settings.initialize_default_speed_settings()
     stats.game_active = True
     stats.misses = 0
     stats.hits = 0
@@ -68,7 +69,7 @@ def fire_bullet(settings: Settings, screen: Surface, ship: Ship, bullets: Group)
         bullets.add(new_bullet)
 
 
-def update_bullets(stats: GameStats, bullets: Group, screen: Surface, target: Target) -> None:
+def update_bullets(settings: Settings, stats: GameStats, bullets: Group, screen: Surface, target: Target) -> None:
     bullets.update()
 
     for bullet in bullets.copy():
@@ -78,6 +79,7 @@ def update_bullets(stats: GameStats, bullets: Group, screen: Surface, target: Ta
         elif bullet.rect.colliderect(target):
             bullets.remove(bullet)
             stats.hits += 1
+            settings.increase_speed()
 
 
 def check_stats(stats: GameStats, bullets: Group):
