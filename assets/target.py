@@ -34,4 +34,4 @@ class Target(Sprite):
         pygame.draw.rect(self.screen, self.color, self.rect)
 
     def center_target(self):
-        self.rect.centery = self.screen_rect.centery
+        self.y = self.screen_rect.centery

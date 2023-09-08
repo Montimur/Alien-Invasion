@@ -52,9 +52,9 @@ def start_game(stats: GameStats, ship: Ship, target: Target, bullets: Group) -> 
     stats.game_active = True
     stats.misses = 0
     stats.hits = 0
+    bullets.empty()
     ship.center_ship()
     target.center_target()
-    bullets.empty()
 
 
 def end_game(stats: GameStats, bullets: Group):

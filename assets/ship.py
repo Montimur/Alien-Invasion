@@ -28,7 +28,7 @@ class Ship:
         self.rect.centery = self.center
 
     def center_ship(self):
-        self.rect.centery = self.screen_rect.centery
+        self.center = self.screen_rect.centery
 
     def blit_me(self):
         self.screen.blit(self.image, self.rect)
