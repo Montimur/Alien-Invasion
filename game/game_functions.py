@@ -87,14 +87,19 @@ def check_for_new_fleet(settings: Settings, screen: Surface, ship: Ship, aliens:
         create_fleet(settings, screen, ship, aliens)
 
 
-def update_bullets(settings: Settings, screen: Surface, ship: Ship, aliens: Group, bullets: Group) -> None:
+def update_bullets(settings: Settings, screen: Surface, stats: GameStats, scoreboard:Scoreboard, ship, aliens: Group,
+                   bullets: Group) -> None:
     bullets.update()
 
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
 
-    check_alien_bullet_collisions(aliens, bullets)
+    collisions = check_alien_bullet_collisions(aliens, bullets)
+    if collisions:
+        for aliens in collisions.values():
+            stats.score += settings.alien_score * len(aliens)
+            scoreboard.prep_score()
 
     check_for_new_fleet(settings, screen, ship, aliens, bullets)
 
