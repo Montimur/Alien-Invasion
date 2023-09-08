@@ -149,9 +149,8 @@ def check_aliens_hit_bottom(screen: Surface, aliens: Group) -> bool:
 
 
 def ship_hit(settings: Settings, stats: GameStats, screen: Surface, ship: Ship, aliens: Group, bullets: Group) -> None:
+    stats.ships_left -= 1
     if stats.ships_left > 0:
-        stats.ships_left -= 1
-
         aliens.empty()
         bullets.empty()
 
