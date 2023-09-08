@@ -21,6 +21,7 @@ class Settings:
         self.fleet_direction = 1
 
         self.speedup_scale = 1.1
+        self.score_scale = 1.5
 
     def initialize_dynamic_settings(self):
         self.ship_speed_factor = 1.5
@@ -28,8 +29,11 @@ class Settings:
         self.alien_speed_factor = 1
         self.fleet_direction = 1
         self.alien_score = 50
+        self.score_scale = 1.5
 
     def increase_speed(self):
         self.ship_speed_factor *= self.speedup_scale
         self.bullet_speed_factor *= self.speedup_scale
         self.alien_speed_factor *= self.speedup_scale
+
+        self.alien_score = int(self.alien_score * self.score_scale)
