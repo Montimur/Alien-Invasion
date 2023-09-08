@@ -2,6 +2,7 @@ import pygame
 from pygame.sprite import Group
 
 import game_functions as gf
+from assets.scoreboard import Scoreboard
 from assets.ship import Ship
 from controls.button import Button
 from game.game_stats import GameStats
@@ -14,6 +15,8 @@ def run_game():
     stats = GameStats(settings)
 
     screen = pygame.display.set_mode(settings.screen_dimensions)
+
+    scoreboard = Scoreboard(settings, screen, stats)
 
     pygame.display.set_caption("Alien Invasion")
 
@@ -32,7 +35,7 @@ def run_game():
             ship.update()
             gf.update_bullets(settings, screen, ship, aliens, bullets)
             gf.update_aliens(settings, stats, screen, ship, aliens, bullets)
-        gf.update_screen(settings, screen, stats, ship, aliens, bullets, play_button)
+        gf.update_screen(settings, screen, stats, scoreboard, ship, aliens, bullets, play_button)
 
 
 run_game()

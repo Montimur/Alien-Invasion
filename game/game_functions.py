@@ -8,6 +8,7 @@ from pygame.surface import Surface
 
 from assets.alien import Alien
 from assets.bullet import Bullet
+from assets.scoreboard import Scoreboard
 from assets.ship import Ship
 from controls.button import Button
 from game.game_stats import GameStats
@@ -176,12 +177,14 @@ def change_fleet_direction(settings: Settings, aliens: Group) -> None:
     settings.fleet_direction *= -1
 
 
-def update_screen(settings: Settings, screen: Surface, stats: GameStats, ship: Ship, aliens: Group, bullets: Group, play_button: Button)\
-        -> None:
+def update_screen(settings: Settings, screen: Surface, stats: GameStats, scoreboard: Scoreboard, ship: Ship,
+                  aliens: Group, bullets: Group, play_button: Button) -> None:
     screen.fill(settings.background_color)
 
     ship.blit_me()
     aliens.draw(screen)
+
+    scoreboard.show_score()
 
     for bullet in bullets.sprites():
         bullet.draw_bullet()
