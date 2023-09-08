@@ -96,6 +96,7 @@ def update_bullets(settings: Settings, screen: Surface, stats: GameStats, scoreb
             bullets.remove(bullet)
 
     collisions = check_alien_bullet_collisions(aliens, bullets)
+
     if collisions:
         for aliens in collisions.values():
             stats.score += settings.alien_score * len(aliens)
