@@ -14,6 +14,8 @@ def run_game():
     settings = Settings()
     stats = GameStats(settings)
 
+    gf.read_high_score(stats)
+
     screen = pygame.display.set_mode(settings.screen_dimensions)
 
     scoreboard = Scoreboard(settings, screen, stats)
