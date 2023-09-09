@@ -78,10 +78,7 @@ def start_game(settings: Settings, screen: Surface, stats: GameStats, ship: Ship
     stats.reset_stats()
     stats.game_active = True
 
-    scoreboard.prep_score()
-    scoreboard.prep_high_score()
-    scoreboard.prep_level()
-    scoreboard.prep_ships()
+    scoreboard.prep_images()
 
     settings.initialize_dynamic_settings()
 
@@ -96,10 +93,6 @@ def fire_bullet(settings: Settings, screen: Surface, ship: Ship, bullets: Group)
     if len(bullets) < settings.bullets_allowed:
         new_bullet = Bullet(settings, screen, ship)
         bullets.add(new_bullet)
-
-
-def check_alien_bullet_collisions(aliens: Group, bullets: Group) -> dict:
-    return pygame.sprite.groupcollide(bullets, aliens, True, True)
 
 
 def update_bullets(settings: Settings, screen: Surface, stats: GameStats, scoreboard: Scoreboard, ship, aliens: Group,
@@ -120,6 +113,10 @@ def update_bullets(settings: Settings, screen: Surface, stats: GameStats, scoreb
         check_high_score(stats, scoreboard)
 
     check_for_new_fleet(settings, screen, stats, scoreboard, ship, aliens, bullets)
+
+
+def check_alien_bullet_collisions(aliens: Group, bullets: Group) -> dict:
+    return pygame.sprite.groupcollide(bullets, aliens, True, True)
 
 
 def check_for_new_fleet(settings: Settings, screen: Surface, stats: GameStats, scoreboard: Scoreboard,
