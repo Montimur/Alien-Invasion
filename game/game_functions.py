@@ -50,12 +50,12 @@ def exit_game(stats: GameStats):
 
 
 def write_high_score(stats: GameStats):
-    with open("../data/high_score.txt", "w") as file:
+    with open("data/high_score.txt", "w") as file:
         file.write(str(stats.high_score))
 
 
 def read_high_score(stats: GameStats):
-    with open("../data/high_score.txt", "r") as file:
+    with open("data/high_score.txt", "r") as file:
         stats.high_score = int(file.readline())
 
 
