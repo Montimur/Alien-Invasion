@@ -1,13 +1,15 @@
 import pygame
+from pygame.sprite import Sprite
 
 from pygame.surface import Surface
 
 from game.settings import Settings
 
 
-class Ship:
+class Ship(Sprite):
 
     def __init__(self, settings: Settings, screen: Surface):
+        super().__init__()
         self.settings = settings
         self.screen = screen
         self.image = pygame.image.load('../images/ship.bmp')

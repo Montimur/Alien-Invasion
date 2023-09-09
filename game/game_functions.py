@@ -65,6 +65,7 @@ def start_game(settings: Settings, screen: Surface, stats: GameStats, ship: Ship
     scoreboard.prep_score()
     scoreboard.prep_high_score()
     scoreboard.prep_level()
+    scoreboard.prep_ships()
 
     settings.initialize_dynamic_settings()
 
@@ -148,12 +149,13 @@ def get_number_of_rows(settings: Settings, ship_height: int, alien_height: int) 
     return number_of_rows
 
 
-def update_aliens(settings: Settings, stats: GameStats, screen: Surface, ship: Ship, aliens: Group, bullets: Group) -> None:
+def update_aliens(settings: Settings, stats: GameStats, screen: Surface, scoreboard: Scoreboard, ship: Ship,
+                  aliens: Group, bullets: Group) -> None:
     check_fleet_edges(settings, aliens)
     aliens.update()
 
     if pygame.sprite.spritecollideany(ship, aliens) or check_aliens_hit_bottom(screen, aliens):
-        ship_hit(settings, stats, screen, ship, aliens, bullets)
+        ship_hit(settings, stats, screen, scoreboard, ship, aliens, bullets)
 
 
 def check_aliens_hit_bottom(screen: Surface, aliens: Group) -> bool:
@@ -164,11 +166,14 @@ def check_aliens_hit_bottom(screen: Surface, aliens: Group) -> bool:
     return False
 
 
-def ship_hit(settings: Settings, stats: GameStats, screen: Surface, ship: Ship, aliens: Group, bullets: Group) -> None:
-    stats.ships_left -= 1
+def ship_hit(settings: Settings, stats: GameStats, screen: Surface, scoreboard: Scoreboard, ship: Ship,
+             aliens: Group, bullets: Group) -> None:
     if stats.ships_left > 0:
+        stats.ships_left -= 1
         aliens.empty()
         bullets.empty()
+
+        scoreboard.prep_ships()
 
         create_fleet(settings, screen, ship, aliens)
         ship.center_ship()
