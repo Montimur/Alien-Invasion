@@ -63,6 +63,8 @@ def start_game(settings: Settings, screen: Surface, stats: GameStats, ship: Ship
     stats.game_active = True
 
     scoreboard.prep_score()
+    scoreboard.prep_high_score()
+    scoreboard.prep_level()
 
     settings.initialize_dynamic_settings()
 
@@ -83,13 +85,6 @@ def check_alien_bullet_collisions(aliens: Group, bullets: Group) -> dict:
     return pygame.sprite.groupcollide(bullets, aliens, True, True)
 
 
-def check_for_new_fleet(settings: Settings, screen: Surface, ship: Ship, aliens: Group, bullets: Group) -> None:
-    if len(aliens) == 0:
-        bullets.empty()
-        settings.increase_speed()
-        create_fleet(settings, screen, ship, aliens)
-
-
 def update_bullets(settings: Settings, screen: Surface, stats: GameStats, scoreboard: Scoreboard, ship, aliens: Group,
                    bullets: Group) -> None:
     bullets.update()
@@ -107,7 +102,17 @@ def update_bullets(settings: Settings, screen: Surface, stats: GameStats, scoreb
 
         check_high_score(stats, scoreboard)
 
-    check_for_new_fleet(settings, screen, ship, aliens, bullets)
+    check_for_new_fleet(settings, screen, stats, scoreboard, ship, aliens, bullets)
+
+
+def check_for_new_fleet(settings: Settings, screen: Surface, stats: GameStats, scoreboard: Scoreboard,
+                        ship: Ship, aliens: Group, bullets: Group) -> None:
+    if len(aliens) == 0:
+        bullets.empty()
+        settings.increase_speed()
+        stats.level += 1
+        scoreboard.prep_level()
+        create_fleet(settings, screen, ship, aliens)
 
 
 def create_fleet(settings: Settings, screen: Surface, ship: Ship, aliens: Group) -> None:
